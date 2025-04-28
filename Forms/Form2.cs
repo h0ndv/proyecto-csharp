@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using proyectocsharp.Models;
 
 namespace proyectocsharp
 {
@@ -16,12 +18,13 @@ namespace proyectocsharp
         GestorProductos controlador = new GestorProductos();
         GestorClientes controladorClientes = new GestorClientes();
         GestorPerifericos gestorPerifericos = new GestorPerifericos();
+        
+        Conexion conexion = new Conexion();
 
         public Form2()
         {
             InitializeComponent();
 
-            
             // Cargar descuentos en comboBox
             string[] descuentos = { "0%", "5%", "10%", "15%", "20%", "25%", "30%", "35%" };
             comboBoxDescuentos.Items.AddRange(descuentos);
@@ -104,7 +107,39 @@ namespace proyectocsharp
                 string preferenciasCliente = txtPreferencias.Text;
 
                 // Crear objeto tipo cliente
-                controladorClientes.GuardarCliente(new Clientes(nombreCliente, rutCliente, celularCliente, correoCliente, comprasCliente, preferenciasCliente));
+                Clientes cliente = new Clientes();
+                cliente.nombre = nombreCliente;
+                cliente.rut = rutCliente;
+                cliente.celular = celularCliente;
+                cliente.correo = correoCliente;
+                cliente.compras = comprasCliente;
+                cliente.preferencias = preferenciasCliente;
+
+                // controladorClientes.GuardarCliente(new Clientes(nombreCliente, rutCliente, celularCliente, correoCliente, comprasCliente, preferenciasCliente));
+                controladorClientes.GuardarCliente(cliente);
+
+                try
+                {
+                    string consulta = "INSERT INTO Clientes (nombre, direccion) VALUES (@nombre, @direccion)";
+                    SqlCommand comando = new SqlCommand(consulta, conexion.AbrirConexion());
+
+                    comando.Parameters.AddWithValue("@nombre", nombreCliente);
+                    comando.Parameters.AddWithValue("@direccion", rutCliente);
+
+                    int filasAfectadas = comando.ExecuteNonQuery();
+
+                    if (filasAfectadas > 0)
+                    {
+                        MessageBox.Show("Cliente agregado correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    conexion.CerrarConexion();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al agregar cliente: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    conexion.CerrarConexion(); // Por si queda abierta
+                }
 
                 // Mostrar cliente en la tabla
                 mostrarClientes();
@@ -563,6 +598,13 @@ namespace proyectocsharp
 
         private void btnRealizarEnvio_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'dataSet1.Clientes' table. You can move, or remove it, as needed.
+            this.clientesTableAdapter.Fill(this.dataSet1.Clientes);
 
         }
 
