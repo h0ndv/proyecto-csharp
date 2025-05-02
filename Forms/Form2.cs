@@ -108,12 +108,13 @@ namespace proyectocsharp
 
                 // Crear objeto tipo cliente
                 Clientes cliente = new Clientes();
-                cliente.nombre = nombreCliente;
-                cliente.rut = rutCliente;
-                cliente.celular = celularCliente;
-                cliente.correo = correoCliente;
-                cliente.compras = comprasCliente;
-                cliente.preferencias = preferenciasCliente;
+                cliente.SetNombre(nombreCliente);
+                cliente.SetRut(rutCliente);
+                cliente.SetCelular(celularCliente);
+                cliente.SetCorreo(correoCliente);
+                cliente.SetCompras(comprasCliente);
+                cliente.SetPreferencias(preferenciasCliente);
+
 
                 // controladorClientes.GuardarCliente(new Clientes(nombreCliente, rutCliente, celularCliente, correoCliente, comprasCliente, preferenciasCliente));
                 controladorClientes.GuardarCliente(cliente);
@@ -178,40 +179,42 @@ namespace proyectocsharp
                 int cantidadProducto = int.Parse(txtCantidadVenta.Text);
 
                 // Validar si el producto existe en la lista de inventario
-                if (!controlador.productos.Any(p => p.id_Producto == idProducto))
+                if (!controlador.productos.Any(p => p.GetId_Producto() == idProducto))
                 {
                     MessageBox.Show("El producto no existe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // Validad si la cantidad es mayor a la cantidad en la lista de inventario
-                var stockProducto = controlador.productos.Find(p => p.id_Producto == idProducto);
+                var stockProducto = controlador.productos.Find(p => p.GetId_Producto() == idProducto);
 
-                if (stockProducto != null && cantidadProducto > stockProducto.cantidad)
+                if (stockProducto != null && cantidadProducto > stockProducto.GetCantidad())
                 {
                     MessageBox.Show("La cantidad es mayor a la cantidad en stock", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // Restar producto de la lista de ivnentario
-                stockProducto.cantidad -= cantidadProducto;
+                stockProducto.SetCantidad(stockProducto.GetCantidad() - cantidadProducto);
 
+                int currentCantidad = stockProducto.GetCantidad();
+                stockProducto.SetCantidad(currentCantidad - cantidadProducto);
                 // Aplicar descuento al precio del producto si es distinto de 0%
                 if (comboBoxDescuentos.SelectedItem.ToString() != "0%")
                 {
                     int descuento = int.Parse(comboBoxDescuentos.SelectedItem.ToString().Replace("%", ""));
-                    stockProducto.precio -= (stockProducto.precio * descuento) / 100;
+                    int aplicarDescuento = stockProducto.GetPrecio() - (stockProducto.GetPrecio() * descuento) / 100;
+                    stockProducto.SetPrecio(aplicarDescuento);
                 }
 
                 // Crear objeto tipo producto y setear parametros
                 Productos producto = new Productos();
-                producto.id_Producto = idProducto;
-                producto.nombre = stockProducto.nombre;
-                producto.tallasProducto = stockProducto.tallasProducto;
-                producto.coloresProducto = stockProducto.coloresProducto;
-                producto.cantidad = cantidadProducto;
-                producto.precio = stockProducto.precio;
-
+                producto.SetId_Producto(stockProducto.GetId_Producto());
+                producto.SetNombre(stockProducto.GetNombre());
+                producto.SetTallasProducto(stockProducto.GetTallasProducto());
+                producto.SetColoresProducto(stockProducto.GetColoresProducto());
+                producto.SetCantidad(cantidadProducto);
+                producto.SetPrecio(stockProducto.GetPrecio());
 
                 // Agregar producto a la lista de venta
                 controlador.GuardarProductoVenta(producto);
@@ -441,7 +444,7 @@ namespace proyectocsharp
                 int idProducto = (int)dataGridView1.SelectedRows[0].Cells["id_Producto"].Value;
 
                 // Eliminar producto
-                var producto = controlador.productos.Find(p => p.id_Producto == idProducto);
+                var producto = controlador.productos.Find(p => p.GetId_Producto() == idProducto);
                 if (producto != null)
                 {
                     controlador.productos.Remove(producto);
@@ -475,7 +478,7 @@ namespace proyectocsharp
             var periferico = (Perifericos)dataGridView4.SelectedRows[0].DataBoundItem;
             if (periferico != null)
             {
-                if (periferico.estado == false)
+                if (periferico.GetEstado() == false)
                 {
                     // Barra de progreso
                     for (int i = 0; i <= 100; i++)
@@ -485,12 +488,12 @@ namespace proyectocsharp
                     }
 
                     // Cambiar el estado del periferico a conectado
-                    periferico.estado = true;
-                    MessageBox.Show($"El periferico {periferico.nombrePeriferico} se ha conectado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    periferico.SetEstado(false);
+                    MessageBox.Show($"El periferico {periferico.GetNombrePeriferico()} se ha conectado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"El periferico {periferico.nombrePeriferico} ya esta conectado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"El periferico {periferico.GetNombrePeriferico()} ya esta conectado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -521,7 +524,7 @@ namespace proyectocsharp
             var periferico = (Perifericos)dataGridView4.SelectedRows[0].DataBoundItem;            
             if (periferico != null)
             {
-                if (periferico.estado == true)
+                if (periferico.GetEstado() == true)
                 {
                     // Barra de progreso
                     for (int i = 0; i <= 100; i++)
@@ -531,12 +534,12 @@ namespace proyectocsharp
                     }
 
                     // Cambiar el estado del periferico a desconectado
-                    periferico.estado = false;
-                    MessageBox.Show($"El periferico {periferico.nombrePeriferico} se ha desconectado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    periferico.SetEstado(false);
+                    MessageBox.Show($"El periferico {periferico.GetNombrePeriferico()} se ha desconectado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"El periferico {periferico.nombrePeriferico} ya esta desconectado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"El periferico {periferico.GetNombrePeriferico()} ya esta desconectado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -556,16 +559,16 @@ namespace proyectocsharp
                 int rutCliente = (int)dataGridView2.SelectedRows[0].Cells["rut"].Value;
 
                 // Eliminar producto
-                var cliente = controladorClientes.clientes.Find(p => p.rut == rutCliente);
+                var cliente = controladorClientes.clientes.Find(p => p.GetRut() == rutCliente);
                 if (cliente != null)
                 {
                     controladorClientes.clientes.Remove(cliente);
                     mostrarProductos();
-                    MessageBox.Show($"Cliente {cliente.nombre} eliminado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Cliente {cliente.GetNombre()} eliminado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show($"El Cliente {cliente.nombre} no existe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"El Cliente {cliente.GetNombre()} no existe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

@@ -9,12 +9,12 @@ namespace proyectocsharp
     internal class Productos
     {
         // Atributos
-        public string nombre { set; get; }
-        public int id_Producto { set; get; }
-        public string tallasProducto { set; get; }
-        public string coloresProducto { set; get; }
-        public int cantidad { set; get; }
-        public int precio { set; get; }
+        private string nombre;
+        private int id_Producto;
+        private string tallasProducto;
+        private string coloresProducto;
+        private int cantidad;
+        private int precio;
 
         // Constructores
         public Productos() { }
@@ -27,5 +27,67 @@ namespace proyectocsharp
             this.cantidad = cantidad;
             this.precio = precio;
         }
+
+        // Getters y Setters
+        public string GetNombre()
+        {
+            return nombre;
+        }
+
+        public void SetNombre(string nombre)
+        {
+            this.nombre = nombre;
+        }
+
+        public int GetId_Producto()
+        {
+            return id_Producto;
+        }
+
+        public void SetId_Producto(int id_Producto)
+        {
+            this.id_Producto = id_Producto;
+        }
+
+        public string GetTallasProducto()
+        {
+            return tallasProducto;
+        }
+
+        public void SetTallasProducto(string tallasProducto)
+        {
+            this.tallasProducto = tallasProducto;
+        }
+
+        public string GetColoresProducto()
+        {
+            return coloresProducto;
+        }
+
+        public void SetColoresProducto(string coloresProducto)
+        {
+           
+            this.coloresProducto = coloresProducto;
+        }
+        public int GetCantidad()
+        {
+            return cantidad;
+        }
+
+        public void SetCantidad(int cantidad)
+        {
+            this.cantidad = cantidad;
+        }
+
+        public int GetPrecio()
+        {
+            return precio;
+        }
+
+        public void SetPrecio(int precio)
+        {
+            this.precio = precio;
+        }
+
     }
 }

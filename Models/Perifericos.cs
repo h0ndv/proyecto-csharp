@@ -9,10 +9,10 @@ namespace proyectocsharp
     internal class Perifericos
     {
         // Atribituos
-        public string nombrePeriferico { set; get; }
-        public string ipAdress { set; get; }
-        public string macAdress { set; get; }
-        public Boolean estado { set; get; }
+        private string nombrePeriferico;
+        private string ipAdress;
+        private string macAdress;
+        private Boolean estado;
 
         // Constructores
         public Perifericos() { }
@@ -22,6 +22,47 @@ namespace proyectocsharp
             this.nombrePeriferico = nombrePeriferico;
             this.ipAdress = ipAdress;
             this.macAdress = macAdress;
+            this.estado = estado;
+        }
+
+        // Getters y Setters
+        public string GetNombrePeriferico()
+        {
+            return nombrePeriferico;
+        }
+
+        public void SetNombrePeriferico(string nombrePeriferico)
+        {
+            this.nombrePeriferico = nombrePeriferico;
+        }
+
+        public string GetIpAdress()
+        {
+            return ipAdress;
+        }
+
+        public void SetIpAdress(string ipAdress)
+        {
+            this.ipAdress = ipAdress;
+        }
+
+        public string GetMacAdress()
+        {
+            return macAdress;
+        }
+
+        public void SetMacAdress(string macAdress)
+        {
+            this.macAdress = macAdress;
+        }
+
+        public Boolean GetEstado()
+        {
+            return estado;
+        }
+
+        public void SetEstado(Boolean estado)
+        {
             this.estado = estado;
         }
     }
