@@ -108,7 +108,8 @@ namespace proyectocsharp
             try
             {
                 // Consulta sql
-                string consulta = "UPDATE Usuarios SET Password = @contraseña WHERE Usuario = @usuario";
+                string consulta = "UPDATE Usuarios SET Password = @contraseña " +
+                    " WHERE Usuario = @usuario";
 
                 // Abrir la conexion
                 SqlCommand sqlCommand = new SqlCommand(consulta, conexion.AbrirConexion());
