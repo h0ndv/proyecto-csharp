@@ -488,7 +488,7 @@ namespace proyectocsharp
                     }
 
                     // Cambiar el estado del periferico a conectado
-                    periferico.SetEstado(false);
+                    periferico.SetEstado(true);
                     MessageBox.Show($"El periferico {periferico.GetNombrePeriferico()} se ha conectado", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
